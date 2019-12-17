@@ -10,9 +10,11 @@ let size_of = function
     | TBitArray n -> n
 
 let array_of = function
-    |VBitArray a -> a
-    |VBit b -> [|b|]
-
+    | VBitArray a -> a
+    | VBit b -> [|b|]
+let map_op f = function
+    | VBitArray a -> VBitArray (Array.map f a)
+    | VBit b      -> VBit (f b)
 let slice_val s e c = Array.sub (array_of c) s (e+1-s)
 
 let args_of = function
@@ -83,9 +85,15 @@ let prec_vals : exp Env.t -> exp Env.t
     | Earg a ->
         isc a gcst
         (fun (u_n,w) -> Earg (Avar u_n), PSub (u_n,w))
-    | Ereg _ | Eram (_,_,_,_,_,_) as e
+    | Ereg _ | Eram _ as e
         -> e, dpv
-    | Enot a -> Enot (extr a), dpv
+    | Enot a ->
+        begin match extr a with
+        | Aconst c  ->
+                let nc = map_op not c in
+                Earg (Aconst nc), PConst nc
+        | a         -> Enot a, dpv
+        end
     | Ebinop (o, a0, a1) -> Ebinop (o, extr a0, extr a1), dpv
     | Emux (a0, a1, a2) -> Emux (extr a0, extr a1, extr a2), dpv
     | Erom (i,j,a) -> Erom (i,j, extr a), dpv
