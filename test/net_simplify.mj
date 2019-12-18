@@ -1,4 +1,4 @@
-main (a) = (o1, o2, o3, o4, o5, o6, o7: [4])
+main (a) = (o1, o2, o3, o4, o5, o6, o7: [4], o8: [8])
 where 
 	b = a;
 	c = 1;
@@ -11,5 +11,6 @@ where
 	o5 = d[2];
 	f = e[1..];
 	o6 = f[1];
-	o7 = n_not<4>(n_zero<4>())
+	o7 = n_not<4>(n_zero<4>());
+	o8 = d . n_not<4>(d);
 end where

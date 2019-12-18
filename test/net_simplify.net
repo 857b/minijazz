@@ -1,17 +1,19 @@
 INPUT a
-OUTPUT o1, o2, o3, o4, o5, o6, o7
+OUTPUT o1, o2, o3, o4, o5, o6, o7, o8
 VAR
-  _l_16 : 2, _l_17 : 3, a, c : 1, e : 4, o1, o2, o3, o4, o5, o6, o7 : 4
+  _l_17 : 2, _l_18 : 3, a, c : 1, e : 4, o1, o2, o3, o4, o5, o6, o7 : 4, 
+  o8 : 8
 IN
+o8 = 00101101
 o7 = 1111
 o6 = SELECT 2 e
 o5 = 1
-e = CONCAT _l_17 0
+e = CONCAT _l_18 0
 o4 = REG c
 o3 = REG a
 o2 = 1
 o1 = a
 c = 1
-_l_16 = CONCAT a 1
-_l_17 = CONCAT _l_16 a
+_l_17 = CONCAT a 1
+_l_18 = CONCAT _l_17 a
 

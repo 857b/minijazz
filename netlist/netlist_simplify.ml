@@ -92,12 +92,19 @@ let prec_vals : exp Env.t -> exp Env.t
         | Aconst c  ->
                 let nc = map_op not c in
                 Earg (Aconst nc), PConst nc
-        | a         -> Enot a, dpv
+        | a -> Enot a, dpv
         end
     | Ebinop (o, a0, a1) -> Ebinop (o, extr a0, extr a1), dpv
     | Emux (a0, a1, a2) -> Emux (extr a0, extr a1, extr a2), dpv
     | Erom (i,j,a) -> Erom (i,j, extr a), dpv
-    | Econcat (a0, a1) -> Econcat (extr a0, extr a1), dpv
+    | Econcat (a0, a1) -> 
+            begin match extr a0, extr a1 with
+            | Aconst c0, Aconst c1 ->
+                    let c = VBitArray 
+                        (Array.concat [array_of c0; array_of c1]) in
+                    Earg (Aconst c), PConst c
+            | a0, a1 -> Econcat (a0, a1), dpv
+            end
     | Eslice (s, e, a) ->
         let cst c = gcst (VBitArray (slice_val s e c))
         in isc a cst
